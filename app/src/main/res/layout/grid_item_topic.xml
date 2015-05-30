@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<au.com.apps4autism.conversations.util.widget.SquareGridView
+<au.com.apps4autism.conversations.util.widget.SquareGridLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
@@ -7,13 +7,25 @@
     android:layout_height="match_parent"
     android:foreground="?android:attr/selectableItemBackground">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:foreground="@color/main_highlight">
+        <au.com.apps4autism.conversations.util.widget.SquareImageView
+            android:id="@+id/topic_image"
+            android:transitionName="topic_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/stock_cinema"/>
+    </FrameLayout>
+
     <TextView
         android:id="@+id/topic_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textColor="@android:color/white"
         android:gravity="center"
-        android:background="@color/main_dark"
         tools:text="Movies"/>
 
-</au.com.apps4autism.conversations.util.widget.SquareGridView>
+</au.com.apps4autism.conversations.util.widget.SquareGridLayout>

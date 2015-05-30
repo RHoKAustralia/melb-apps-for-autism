@@ -4,6 +4,13 @@
     android:background="@android:color/white"
     android:orientation="vertical">
 
+    <au.com.apps4autism.conversations.util.widget.SquareImageView
+        android:transitionName="topic_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:src="@drawable/stock_cinema"/>
+
     <ListView
         android:id="@+id/conversation_list"
         android:layout_width="match_parent"
