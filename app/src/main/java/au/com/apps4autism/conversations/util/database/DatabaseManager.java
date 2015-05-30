@@ -2,18 +2,17 @@ package au.com.apps4autism.conversations.util.database;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.database.SQLException;
-import android.database.Cursor;
 import android.content.Context;
 import android.content.ContentValues;
 import android.os.Environment;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
 import au.com.apps4autism.conversations.model.User;
-import au.com.apps4autism.conversations.model.Themes;
+import au.com.apps4autism.conversations.model.Theme;
 import au.com.apps4autism.conversations.model.Conversation;
 import au.com.apps4autism.conversations.model.Interaction;
+import au.com.apps4autism.conversations.model.Question;
 
 public class DatabaseManager {
 
@@ -39,6 +38,8 @@ public class DatabaseManager {
     static final String COLUMN_NAME = "name";
     static final String COLUMN_AGE = "age";
     static final String COLUMN_GENDER = "gender";
+    static final String COLUMN_CURRENT_LEVEL = "current_level";
+    static final String COLUMN_CURRENT_PROGRESS = "current_progress";
     static final String COLUMN_THEME = "theme";
     static final String COLUMN_LEVEL = "level";
     static final String COLUMN_STATEMENT = "text";
@@ -53,7 +54,9 @@ public class DatabaseManager {
             {COLUMN_ID,
             COLUMN_NAME,
             COLUMN_AGE,
-            COLUMN_GENDER};
+            COLUMN_GENDER,
+            COLUMN_CURRENT_LEVEL,
+            COLUMN_CURRENT_PROGRESS};
 
     private String[] TABLE_THEME_COLUMNS =
             {COLUMN_ID,
@@ -82,7 +85,9 @@ public class DatabaseManager {
             + COLUMN_ID + " integer primary key autoincrement not null, "
             + COLUMN_NAME  + " text, "
             + COLUMN_AGE + " integer, "
-            + COLUMN_GENDER + " text);";
+            + COLUMN_GENDER + " text, "
+            + COLUMN_CURRENT_LEVEL + " integer, "
+            + COLUMN_CURRENT_PROGRESS + " integer);";
 
     static final String CREATE_TABLE_THEME = "create table "
             + TABLE_THEME + " ("
@@ -125,14 +130,18 @@ public class DatabaseManager {
         Values.put(COLUMN_NAME, user.getName());
         Values.put(COLUMN_AGE, user.getAge());
         Values.put(COLUMN_GENDER, user.getGender());
+        Values.put(COLUMN_CURRENT_PROGRESS, user.getCurrentLevel());
+        Values.put(COLUMN_CURRENT_PROGRESS, user.getCurrentProgress());
         database.insert(TABLE_USER, null, Values);
     }
 
     public User getUser(String userName) {
-        String name;
+
+        // Example SQL
+
+        /*String name;
         int age;
         String gender;
-
         String whereClause = COLUMN_NAME + " =?";
         String[] whereArgs = new String[]{userName};
 
@@ -143,22 +152,23 @@ public class DatabaseManager {
         age = cursor.getInt(2);
         gender = cursor.getString(3);
 
-        cursor.close();
+        cursor.close();*/
 
-        User user = new User(name,age,gender);
+        User user = new User("Sam",15,User.male,1,0);
 
         return user;
     }
 
-    public Themes getThemes(int level) {
+    public ArrayList<Theme> getThemes(int level) {
 
-        Themes themes = new Themes();
+        ArrayList<Theme> themes = new ArrayList<Theme>();
 
         // SQL to go here
 
         // Prepare example theme object
-        themes.addTheme("Birthdays", themeDirectory + "birthday.png");
-        themes.addTheme("Movies", themeDirectory + "movie.png");
+
+        themes.add(new Theme("Birthdays", themeDirectory + "birthday.png"));
+        themes.add(new Theme("Movies", themeDirectory + "movie.png"));
 
         return themes;
     }
@@ -171,9 +181,9 @@ public class DatabaseManager {
         String statementAudioPath = audioDirectory + "birthday_statement.wav";
         Conversation conversation = new Conversation("It's my birthday", statementAudioPath);
 
-        Map<String, Boolean> questions = new HashMap<String, Boolean>();
-        questions.put("How old are you?", true);
-        questions.put("What year were you born?", false);
+        ArrayList<Question> questions = new ArrayList<Question>();
+        questions.add(new Question("How old are you?", true));
+        questions.add(new Question("What year were you born?", false));
         String answer = "I am 15 years old";
         String answerAudioPath = audioDirectory + "birthday.wav";
 

@@ -8,11 +8,19 @@ public class User {
     private String mName;
     private int mAge;
     private String mGender;
+    private int mCurrentLevel;
+    private int mCurrentProgress;
 
     public User(String name, int age, String gender) {
+        this(name, age, gender, 1, 0);
+    }
+
+    public User(String name, int age, String gender, int currentLevel, int currentProgress) {
         mName = name;
         mAge = age;
         mGender = gender;
+        mCurrentLevel = currentLevel;
+        mCurrentProgress = currentProgress;
     }
 
     public String getName() {
@@ -25,5 +33,13 @@ public class User {
     
     public String getGender() {
         return mGender;
+    }
+
+    public int getCurrentLevel() {
+        return mCurrentLevel;
+    }
+
+    public int getCurrentProgress() {
+        return mCurrentProgress;
     }
 }

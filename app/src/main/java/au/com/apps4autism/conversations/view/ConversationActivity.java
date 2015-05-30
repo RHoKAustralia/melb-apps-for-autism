@@ -13,7 +13,13 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import au.com.apps4autism.conversations.R;
+import au.com.apps4autism.conversations.model.Conversation;
+import au.com.apps4autism.conversations.model.Interaction;
+import au.com.apps4autism.conversations.model.Question;
+import au.com.apps4autism.conversations.util.database.DatabaseManager;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -32,6 +38,9 @@ public class ConversationActivity extends AppCompatActivity {
     @InjectView(R.id.topic_image)
     ImageView mTopicImage;
 
+    Conversation mConversation;
+    ArrayList<Interaction> mInteractions;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,14 +50,21 @@ public class ConversationActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        final String question = "It's my birthday";
-        mQuestionTextView.setText(question);
+        DatabaseManager databaseManager = new DatabaseManager(this);
+        databaseManager.open();
+        mConversation = databaseManager.getConversation("Birthday", 1);
+        databaseManager.close();
+
+        mInteractions = mConversation.getInteractions();
+
+        final String statement = mConversation.getStatement();
+        mQuestionTextView.setText(statement);
 
         final TextToSpeech tts = new TextToSpeech(getApplicationContext(), null);
         mPlayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tts.speak(question, TextToSpeech.QUEUE_FLUSH, null);
+                tts.speak(statement, TextToSpeech.QUEUE_FLUSH, null);
             }
         });
 
@@ -64,8 +80,10 @@ public class ConversationActivity extends AppCompatActivity {
         });
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
-        adapter.add("How old are you?");
-        adapter.add("What day is it?");
+
+        ArrayList<Question> questions = mInteractions.get(0).getQuestions();
+        adapter.add(questions.get(0).getText());
+        adapter.add(questions.get(1).getText());
         mConversationList.setAdapter(adapter);
     }
 

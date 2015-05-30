@@ -1,20 +1,20 @@
 package au.com.apps4autism.conversations.model;
 
-import java.util.Map;
+import java.util.ArrayList;
 
 public class Interaction {
 
-    private Map<String,Boolean> mQuestions;
+    private ArrayList<Question> mQuestions;
     private String mAnswer;
     private String mAnswerAudioPath;
 
-    public Interaction(Map<String,Boolean> questions, String answer, String audioPath) {
+    public Interaction(ArrayList<Question> questions, String answer, String audioPath) {
         mQuestions = questions;
         mAnswer = answer;
         mAnswerAudioPath = audioPath;
     }
 
-    public Map<String,Boolean> getQuestions() {
+    public ArrayList<Question> getQuestions() {
         return mQuestions;
     }
 

@@ -1,17 +1,17 @@
 package au.com.apps4autism.conversations.model;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 public class Conversation {
 
     private String mStatement;
     private String mStatementAudioPath;
-    private LinkedList<Interaction> mInteractions;
+    private ArrayList<Interaction> mInteractions;
 
     public Conversation(String statement, String statementAudioPath) {
         mStatement = statement;
         mStatementAudioPath = statementAudioPath;
-        mInteractions = new LinkedList<Interaction>();
+        mInteractions = new ArrayList<Interaction>();
     }
 
     public String getStatement() {
@@ -26,8 +26,8 @@ public class Conversation {
         mInteractions.add(interaction);
     }
 
-    public Interaction getInteraction(Interaction interaction) {
-        return mInteractions.pollFirst(); // Returns null if no element is found
+    public ArrayList<Interaction> getInteractions() {
+        return mInteractions;
     }
 
 }

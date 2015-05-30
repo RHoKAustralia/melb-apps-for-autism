@@ -10,14 +10,18 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+
 import au.com.apps4autism.conversations.R;
+import au.com.apps4autism.conversations.model.Theme;
+import au.com.apps4autism.conversations.util.database.DatabaseManager;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-
 
 public class TopicActivity extends AppCompatActivity {
     @InjectView(R.id.topic_grid)
     GridView mTopicGrid;
+    ArrayList<Theme> mThemes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +32,17 @@ public class TopicActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        DatabaseManager databaseManager = new DatabaseManager(this);
+        databaseManager.open();
+        mThemes = databaseManager.getThemes(1);
+        databaseManager.close();
+
         TopicAdapter adapter = new TopicAdapter(this);
-        adapter.add("Movies");
-        adapter.add("School");
+
+        for(int i = 0; i < mThemes.size(); i++) {
+            adapter.add(mThemes.get(i).getName());
+        }
+
         mTopicGrid.setAdapter(adapter);
         mTopicGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
