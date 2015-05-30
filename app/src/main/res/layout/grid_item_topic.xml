@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<au.com.apps4autism.conversations.util.widget.SquareGridView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:foreground="?android:attr/selectableItemBackground">
+
+    <TextView
+        android:id="@+id/topic_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textColor="@android:color/white"
+        android:gravity="center"
+        android:background="@color/main_dark"
+        tools:text="Movies"/>
+
+</au.com.apps4autism.conversations.util.widget.SquareGridView>
