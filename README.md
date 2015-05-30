@@ -1,2 +1,2 @@
 # melb-apps-for-autism
-Mobile Applications for Autism developed at the RHoK Melbourne Winter Hack 2015
+Mobile Applications for Autism developed at the Melbourne Winter Hack 2015
