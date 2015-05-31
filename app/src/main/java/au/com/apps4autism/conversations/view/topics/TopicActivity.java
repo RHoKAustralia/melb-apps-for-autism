@@ -41,10 +41,10 @@ public class TopicActivity extends AppCompatActivity {
         DatabaseManager databaseManager = new DatabaseManager(this);
         try {
             databaseManager.open();
-            mThemes = databaseManager.getThemes(levelNum);
+            mThemes = databaseManager.getThemes(0, levelNum);
             databaseManager.close();
         } catch (SQLException e) {
-            mThemes = databaseManager.getThemes(levelNum);
+            mThemes = databaseManager.getThemes(0, levelNum);
         }
 
         TopicAdapter adapter = new TopicAdapter(this, mThemes);
