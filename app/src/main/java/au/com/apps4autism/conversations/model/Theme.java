@@ -25,4 +25,8 @@ public class Theme implements Serializable {
     public boolean isComplete() {
         return mIsComplete;
     }
+
+    public void setComplete(boolean complete) {
+        mIsComplete = complete;
+    }
 }

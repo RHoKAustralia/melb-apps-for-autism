@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageView;
 
 import java.util.ArrayList;
 
@@ -25,7 +24,17 @@ public class ThemeActivity extends AppCompatActivity {
 
     @InjectView(R.id.topic_grid)
     GridView mTopicGrid;
-    ArrayList<Theme> mThemes;
+    private ThemeAdapter mAdapter;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == RESULT_OK) {
+            mAdapter.getItem(requestCode).setComplete(true);
+            mAdapter.notifyDataSetChanged();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,30 +48,28 @@ public class ThemeActivity extends AppCompatActivity {
         final int levelNum = getIntent().getExtras().getInt(LEVEL_NUM_KEY, 1);
 
         DatabaseManager databaseManager = new DatabaseManager(this);
+        ArrayList<Theme> themes;
         try {
             databaseManager.open();
-            mThemes = databaseManager.getThemes(1, levelNum);
+            themes = databaseManager.getThemes(0, levelNum);
             databaseManager.close();
         } catch (SQLException e) {
-            mThemes = databaseManager.getThemes(1, levelNum);
+            themes = databaseManager.getThemes(0, levelNum);
         }
 
         Level level = databaseManager.getLevels().get(levelNum - 1);
         getSupportActionBar().setTitle(level.getName());
 
-        ThemeAdapter adapter = new ThemeAdapter(this, mThemes);
+        mAdapter = new ThemeAdapter(this, themes);
 
-        mTopicGrid.setAdapter(adapter);
+        mTopicGrid.setAdapter(mAdapter);
         mTopicGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                ImageView imageView = ButterKnife.findById(view, R.id.topic_image);
-
                 Intent intent = new Intent(ThemeActivity.this, ConversationActivity.class);
                 intent.putExtra(ConversationActivity.LEVEL_NUM_KEY, levelNum);
-                intent.putExtra(ConversationActivity.THEME_KEY, mThemes.get(position));
-                //ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(ThemeActivity.this, imageView, "topic_image");
-                startActivity(intent/*, options.toBundle()*/);
+                intent.putExtra(ConversationActivity.THEME_KEY, mAdapter.getItem(position));
+                startActivityForResult(intent, position);
             }
         });
     }

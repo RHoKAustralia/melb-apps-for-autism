@@ -1,6 +1,8 @@
 package au.com.apps4autism.conversations.view.conversation;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -47,6 +49,7 @@ public class ConversationActivity extends AppCompatActivity {
     private OptionsAdapter mOptionsAdapter;
     private Interaction mCurrentInteraction;
     private String ttsContent;
+    private TextToSpeech mTts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,15 +77,18 @@ public class ConversationActivity extends AppCompatActivity {
         final String statement = mConversation.getStatement();
         ttsContent = statement;
 
-        final TextToSpeech tts = new TextToSpeech(getApplicationContext(), null);
+        mTts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int i) {
+                mTts.speak(ttsContent, TextToSpeech.QUEUE_FLUSH, null);
+            }
+        });
         mPlayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tts.speak(ttsContent, TextToSpeech.QUEUE_FLUSH, null);
+                mTts.speak(ttsContent, TextToSpeech.QUEUE_FLUSH, null);
             }
         });
-
-        tts.speak(ttsContent, TextToSpeech.QUEUE_FLUSH, null);
 
         mRootLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -112,7 +118,7 @@ public class ConversationActivity extends AppCompatActivity {
                     mConversationAdapter.add(question.getText());
                     mConversationAdapter.add(mCurrentInteraction.getAnswer());
                     ttsContent = mCurrentInteraction.getAnswer();
-                    tts.speak(ttsContent, TextToSpeech.QUEUE_FLUSH, null);
+                    mTts.speak(ttsContent, TextToSpeech.QUEUE_FLUSH, null);
 
                     mConversationList.post(new Runnable() {
                         @Override
@@ -127,6 +133,15 @@ public class ConversationActivity extends AppCompatActivity {
                         mOptionsAdapter.clear();
                         mOptionsAdapter.addAll(mCurrentInteraction.getQuestions());
                     } else {
+                        mOptionsAdapter.clear();
+                        Handler handler = new Handler(Looper.getMainLooper());
+                        handler.postDelayed(new Runnable() {
+                             @Override
+                             public void run() {
+                                 setResult(RESULT_OK);
+                                 finish();
+                             }
+                         }, 500);
                         Toast.makeText(ConversationActivity.this, "You win!", Toast.LENGTH_LONG).show();
                     }
                 } else {

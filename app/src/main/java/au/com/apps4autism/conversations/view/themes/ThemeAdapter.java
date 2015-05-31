@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -37,7 +38,15 @@ public class ThemeAdapter extends ArrayAdapter<Theme> {
 
         TextView topicText = ViewHolder.get(convertView, R.id.topic_text);
         topicText.setText(theme.getName());
-        Picasso.with(getContext()).load(theme.getImagePath()).error(R.drawable.stock_cinema);
+
+        ImageView imageView = ViewHolder.get(convertView, R.id.topic_image);
+        Picasso.with(getContext()).load(theme.getImagePath()).error(R.drawable.stock_cinema).into(imageView);
+
+        if(theme.isComplete()) {
+            imageView.setColorFilter(getContext().getResources().getColor(R.color.theme_complete));
+        } else {
+            imageView.clearColorFilter();
+        }
 
         return convertView;
     }

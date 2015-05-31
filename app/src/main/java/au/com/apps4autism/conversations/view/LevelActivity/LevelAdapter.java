@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -38,6 +39,17 @@ public class LevelAdapter extends ArrayAdapter<Level> {
 
         TextView levelNametext = ViewHolder.get(convertView, R.id.level_name_text);
         levelNametext.setText(level.getName());
+
+        if(level.isLocked()) {
+            convertView.setBackgroundResource(R.color.level_locked);
+
+            ImageView levelStatusImage = ViewHolder.get(convertView, R.id.level_status_image);
+            levelStatusImage.setImageResource(R.drawable.ic_lock_grey600_48dp);
+            levelStatusImage.setVisibility(View.VISIBLE);
+        } else {
+            convertView.setBackgroundResource(android.R.color.white);
+            ViewHolder.get(convertView, R.id.level_status_image).setVisibility(View.GONE);
+        }
 
         return convertView;
     }

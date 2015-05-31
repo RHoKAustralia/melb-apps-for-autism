@@ -21,7 +21,7 @@
                 android:layout_height="match_parent"
                 android:padding="4dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/boy"/>
+                android:src="@drawable/girl"/>
 
             <TextView
                 android:id="@+id/question_text"
