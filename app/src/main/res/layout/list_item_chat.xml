@@ -17,6 +17,7 @@
             android:orientation="horizontal">
 
             <ImageView
+                android:id="@+id/left_image"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:padding="4dp"
@@ -25,10 +26,20 @@
 
             <TextView
                 android:id="@+id/question_text"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:padding="16dp"
                 tools:text="Howdily doodily"/>
+
+            <ImageView
+                android:id="@+id/right_image"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                android:padding="4dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/face"/>
         </LinearLayout>
 
     </android.support.v7.widget.CardView>

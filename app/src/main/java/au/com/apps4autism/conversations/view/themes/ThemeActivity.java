@@ -33,6 +33,19 @@ public class ThemeActivity extends AppCompatActivity {
         if(resultCode == RESULT_OK) {
             mAdapter.getItem(requestCode).setComplete(true);
             mAdapter.notifyDataSetChanged();
+
+            boolean complete = true;
+            for(int i = 0; i < mAdapter.getCount(); ++i) {
+                if(!mAdapter.getItem(i).isComplete()) {
+                    complete = false;
+                    break;
+                }
+            }
+
+            if(complete) {
+                setResult(RESULT_OK);
+                finish();
+            }
         }
     }
 

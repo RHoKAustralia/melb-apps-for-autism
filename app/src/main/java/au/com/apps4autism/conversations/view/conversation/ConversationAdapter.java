@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -38,10 +39,19 @@ public class ConversationAdapter extends ArrayAdapter<String> {
         CardView card = ViewHolder.get(convertView, R.id.chat_card);
 
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)card.getLayoutParams();
+
+        ImageView leftImage = ViewHolder.get(convertView, R.id.left_image);
+        ImageView rightImage = ViewHolder.get(convertView, R.id.right_image);
         if(position % 2 == 1) {
             params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+
+            leftImage.setVisibility(View.GONE);
+            rightImage.setVisibility(View.VISIBLE);
         } else {
             params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+
+            leftImage.setVisibility(View.VISIBLE);
+            rightImage.setVisibility(View.GONE);
         }
         card.setLayoutParams(params);
 

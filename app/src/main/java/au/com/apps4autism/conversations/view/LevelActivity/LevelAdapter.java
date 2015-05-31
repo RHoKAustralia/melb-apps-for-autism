@@ -28,7 +28,7 @@ public class LevelAdapter extends ArrayAdapter<Level> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if(convertView == null) {
+        if (convertView == null) {
             convertView = mLayoutInflater.inflate(R.layout.list_item_level, parent, false);
         }
 
@@ -40,11 +40,15 @@ public class LevelAdapter extends ArrayAdapter<Level> {
         TextView levelNametext = ViewHolder.get(convertView, R.id.level_name_text);
         levelNametext.setText(level.getName());
 
-        if(level.isLocked()) {
+        ImageView levelStatusImage = ViewHolder.get(convertView, R.id.level_status_image);
+        if (level.isLocked()) {
             convertView.setBackgroundResource(R.color.level_locked);
 
-            ImageView levelStatusImage = ViewHolder.get(convertView, R.id.level_status_image);
             levelStatusImage.setImageResource(R.drawable.ic_lock_grey600_48dp);
+            levelStatusImage.setVisibility(View.VISIBLE);
+        } else if (level.isCompleted()) {
+            convertView.setBackgroundResource(R.color.theme_complete);
+            levelStatusImage.setImageResource(R.drawable.ic_done_grey600_48dp);
             levelStatusImage.setVisibility(View.VISIBLE);
         } else {
             convertView.setBackgroundResource(android.R.color.white);

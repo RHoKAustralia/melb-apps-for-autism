@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import au.com.apps4autism.conversations.R;
 import au.com.apps4autism.conversations.model.Level;
-import au.com.apps4autism.conversations.model.User;
 import au.com.apps4autism.conversations.util.database.DatabaseManager;
 import au.com.apps4autism.conversations.view.themes.ThemeActivity;
 import butterknife.ButterKnife;
@@ -19,8 +18,18 @@ import butterknife.InjectView;
 public class LevelActivity extends AppCompatActivity {
     @InjectView(R.id.level_list)
     ListView mLevelList;
+    private LevelAdapter mLevelAdapter;
 
-    private User mUser;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == RESULT_OK) {
+            mLevelAdapter.getItem(requestCode).setCompleted(true);
+            if(mLevelAdapter.getCount() >= requestCode) {
+                mLevelAdapter.getItem(requestCode + 1).setLocked(false);
+            }
+            mLevelAdapter.notifyDataSetChanged();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,28 +38,20 @@ public class LevelActivity extends AppCompatActivity {
         ButterKnife.inject(this);
 
         DatabaseManager databaseManager = new DatabaseManager(this);
-        try {
-            databaseManager.open();
-            mUser = databaseManager.getUser("Sam");
-            databaseManager.close();
-        } catch (Exception e) {
-            mUser = databaseManager.getUser("Sam");
-        }
-
-        final LevelAdapter levelAdapter = new LevelAdapter(this, databaseManager.getLevels());
-        mLevelList.setAdapter(levelAdapter);
+        mLevelAdapter = new LevelAdapter(this, databaseManager.getLevels());
+        mLevelList.setAdapter(mLevelAdapter);
 
         mLevelList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Level level = levelAdapter.getItem(position);
+                Level level = mLevelAdapter.getItem(position);
 
                 if(level.isLocked()) {
                     Toast.makeText(LevelActivity.this, "Must complete more levels to unlock", Toast.LENGTH_LONG).show();
                 } else {
                     Intent intent = new Intent(LevelActivity.this, ThemeActivity.class);
                     intent.putExtra(ThemeActivity.LEVEL_NUM_KEY, position + 1);
-                    startActivity(intent);
+                    startActivityForResult(intent, position);
                 }
             }
         });
