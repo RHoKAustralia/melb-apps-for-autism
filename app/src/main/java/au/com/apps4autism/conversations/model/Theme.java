@@ -1,6 +1,8 @@
 package au.com.apps4autism.conversations.model;
 
-public class Theme {
+import java.io.Serializable;
+
+public class Theme implements Serializable {
 
     String mName;
     String mImagePath;

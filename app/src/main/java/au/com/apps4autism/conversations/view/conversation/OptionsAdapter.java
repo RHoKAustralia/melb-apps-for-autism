@@ -1,4 +1,4 @@
-package au.com.apps4autism.conversations.view;
+package au.com.apps4autism.conversations.view.conversation;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,16 +7,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import au.com.apps4autism.conversations.R;
-import au.com.apps4autism.conversations.util.ViewHolder;
+import au.com.apps4autism.conversations.model.Question;
 
 /**
  * Created by tim on 30/05/15.
  */
-public class TopicAdapter extends ArrayAdapter<String> {
+public class OptionsAdapter extends ArrayAdapter<Question> {
     private final LayoutInflater mLayoutInflater;
 
-    public TopicAdapter(Context context) {
+    public OptionsAdapter(Context context) {
         super(context, 0);
 
         mLayoutInflater = LayoutInflater.from(context);
@@ -25,11 +24,10 @@ public class TopicAdapter extends ArrayAdapter<String> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView == null) {
-            convertView = mLayoutInflater.inflate(R.layout.grid_item_topic, parent, false);
+            convertView = mLayoutInflater.inflate(android.R.layout.simple_list_item_1, parent, false);
         }
 
-        TextView topicText = ViewHolder.get(convertView, R.id.topic_text);
-        topicText.setText(getItem(position));
+        ((TextView)convertView).setText(getItem(position).getText());
 
         return convertView;
     }

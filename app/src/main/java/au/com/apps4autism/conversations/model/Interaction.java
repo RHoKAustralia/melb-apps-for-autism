@@ -3,7 +3,6 @@ package au.com.apps4autism.conversations.model;
 import java.util.ArrayList;
 
 public class Interaction {
-
     private ArrayList<Question> mQuestions;
     private String mAnswer;
     private String mAnswerAudioPath;

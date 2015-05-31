@@ -166,7 +166,6 @@ public class DatabaseManager {
         // SQL to go here
 
         // Prepare example theme object
-
         themes.add(new Theme("Birthdays", themeDirectory + "birthday.png"));
         themes.add(new Theme("Movies", themeDirectory + "movie.png"));
 
@@ -187,7 +186,17 @@ public class DatabaseManager {
         String answer = "I am 15 years old";
         String answerAudioPath = audioDirectory + "birthday.wav";
 
-        Interaction interaction = new Interaction(questions,answer,answerAudioPath);
+        Interaction interaction = new Interaction(questions, answer, answerAudioPath);
+        conversation.addInteraction(interaction);
+
+        questions = new ArrayList<Question>();
+        questions.add(new Question("Good question?", true));
+        questions.add(new Question("Bad question", false));
+        answer = "Yes, yes it is";
+        answerAudioPath = audioDirectory + "birthday.wav";
+
+        interaction = new Interaction(questions, answer, answerAudioPath);
+        conversation.addInteraction(interaction);
         conversation.addInteraction(interaction);
 
         return conversation;

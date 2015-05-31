@@ -1,4 +1,4 @@
-package au.com.apps4autism.conversations.view;
+package au.com.apps4autism.conversations.view.LevelActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,11 +7,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.util.Log;
 
 import au.com.apps4autism.conversations.R;
-import au.com.apps4autism.conversations.util.database.DatabaseManager;
 import au.com.apps4autism.conversations.model.User;
+import au.com.apps4autism.conversations.util.database.DatabaseManager;
+import au.com.apps4autism.conversations.view.topics.TopicActivity;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -27,9 +27,13 @@ public class LevelActivity extends AppCompatActivity {
         ButterKnife.inject(this);
 
         DatabaseManager databaseManager = new DatabaseManager(this);
-        databaseManager.open();
-        mUser = databaseManager.getUser("Sam");
-        databaseManager.close();
+        try {
+            databaseManager.open();
+            mUser = databaseManager.getUser("Sam");
+            databaseManager.close();
+        } catch (Exception e) {
+            mUser = databaseManager.getUser("Sam");
+        }
 
         ArrayAdapter levelAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1);
         levelAdapter.add("Level One");
@@ -39,6 +43,7 @@ public class LevelActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(LevelActivity.this, TopicActivity.class);
+                intent.putExtra(TopicActivity.LEVEL_NUM_KEY, i + 1);
                 startActivity(intent);
             }
         });
