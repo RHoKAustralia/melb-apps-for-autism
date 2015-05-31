@@ -25,6 +25,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(DatabaseManager.CREATE_TABLE_THEME);
         db.execSQL(DatabaseManager.CREATE_TABLE_STATEMENT);
         db.execSQL(DatabaseManager.CREATE_TABLE_INTERACTION);
+        db.execSQL(DatabaseManager.CREATE_TABLE_USERPROGRESS);
     }
 
     @Override

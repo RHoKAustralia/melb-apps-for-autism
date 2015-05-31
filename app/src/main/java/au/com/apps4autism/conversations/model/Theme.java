@@ -4,10 +4,12 @@ public class Theme {
 
     String mName;
     String mImagePath;
+    boolean mIsComplete;
 
-    public Theme(String name, String imagePath) {
+    public Theme(String name, String imagePath, boolean isComplete) {
         mName = name;
         mImagePath = imagePath;
+        mIsComplete = isComplete;
     }
 
     public String getName() {
@@ -15,6 +17,10 @@ public class Theme {
     }
 
     public String getImagePath() {
-        return mName;
+        return mImagePath;
+    }
+
+    public boolean isComplete() {
+        return mIsComplete;
     }
 }

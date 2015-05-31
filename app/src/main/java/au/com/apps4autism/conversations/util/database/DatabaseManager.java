@@ -1,5 +1,6 @@
 package au.com.apps4autism.conversations.util.database;
 
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.SQLException;
 import android.content.Context;
@@ -31,8 +32,10 @@ public class DatabaseManager {
     static final String TABLE_THEME = "theme";
     static final String TABLE_STATEMENT = "statement";
     static final String TABLE_INTERACTION = "interaction";
+    static final String TABLE_USERPROGRESS = "userprogress";
 
     static final String COLUMN_ID = "_id";
+    static final String COLUMN_USER_ID = "user_id";
     static final String COLUMN_THEME_ID = "theme_id";
     static final String COLUMN_STATEMENT_ID = "statement_id";
     static final String COLUMN_NAME = "name";
@@ -46,6 +49,7 @@ public class DatabaseManager {
     static final String COLUMN_QUESTION = "question_text";
     static final String COLUMN_ANSWER = "answer_text";
     static final String COLUMN_IS_CORRECT = "is_correct";
+    static final String COLUMN_IS_COMPLETE = "is_correct";
     static final String COLUMN_IMAGE_ASSET = "image_asset";
     static final String COLUMN_AUDIO_ASSET = "audio_asset";
 
@@ -79,6 +83,13 @@ public class DatabaseManager {
             COLUMN_IS_CORRECT,
             COLUMN_AUDIO_ASSET};
 
+    private String[] TABLE_USERPROGRESS_COLUMNS =
+            {COLUMN_ID,
+            COLUMN_USER_ID,
+            COLUMN_THEME_ID,
+            COLUMN_LEVEL,
+            COLUMN_IS_COMPLETE,};
+
     // Create table statements
     static final String CREATE_TABLE_USER = "create table "
             + TABLE_USER + " ("
@@ -111,6 +122,14 @@ public class DatabaseManager {
             + COLUMN_ANSWER + " text, "
             + COLUMN_IS_CORRECT + " boolean, "
             + COLUMN_AUDIO_ASSET + " text);";
+
+    static final String CREATE_TABLE_USERPROGRESS = "create table "
+            + TABLE_USERPROGRESS + " ("
+            + COLUMN_ID + " integer primary key autoincrement not null, "
+            + COLUMN_USER_ID + " integer, "
+            + COLUMN_THEME_ID + " integer, "
+            + COLUMN_LEVEL + " integer, "
+            + COLUMN_IS_COMPLETE + " boolean);";
     
     public DatabaseManager(Context context) {
         databaseHelper = DatabaseHelper.getInstance(context);
@@ -124,19 +143,19 @@ public class DatabaseManager {
         databaseHelper.close();
     }
 
-    public void addUser(User user) {
-        //TODO handle duplicate names
+    public User createUser(String name, int age, String gender) {
         ContentValues Values = new ContentValues();
-        Values.put(COLUMN_NAME, user.getName());
-        Values.put(COLUMN_AGE, user.getAge());
-        Values.put(COLUMN_GENDER, user.getGender());
-        Values.put(COLUMN_CURRENT_PROGRESS, user.getCurrentLevel());
-        Values.put(COLUMN_CURRENT_PROGRESS, user.getCurrentProgress());
-        database.insert(TABLE_USER, null, Values);
+        Values.put(COLUMN_NAME, name);
+        Values.put(COLUMN_AGE, age);
+        Values.put(COLUMN_GENDER, gender);
+        Values.put(COLUMN_CURRENT_LEVEL, 1);
+        Values.put(COLUMN_CURRENT_PROGRESS, 0);
+        long uID = database.insert(TABLE_USER, null, Values);
+        User user = new User(uID, name, age, gender, 1, 0);
+        return user;
     }
 
     public User getUser(String userName) {
-
         // Example SQL
 
         /*String name;
@@ -154,12 +173,12 @@ public class DatabaseManager {
 
         cursor.close();*/
 
-        User user = new User("Sam",15,User.male,1,0);
+        User user = new User(0, "Sam", 15, User.male, 1, 0);
 
         return user;
     }
 
-    public ArrayList<Theme> getThemes(int level) {
+    public ArrayList<Theme> getThemes(long id, int level) {
 
         ArrayList<Theme> themes = new ArrayList<Theme>();
 
@@ -167,8 +186,8 @@ public class DatabaseManager {
 
         // Prepare example theme object
 
-        themes.add(new Theme("Birthdays", themeDirectory + "birthday.png"));
-        themes.add(new Theme("Movies", themeDirectory + "movie.png"));
+        themes.add(new Theme("Birthdays", themeDirectory + "birthday.png", false));
+        themes.add(new Theme("Movies", themeDirectory + "movie.png", false));
 
         return themes;
     }
