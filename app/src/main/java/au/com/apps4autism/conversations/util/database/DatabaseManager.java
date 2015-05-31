@@ -1,10 +1,19 @@
 package au.com.apps4autism.conversations.util.database;
 
+<<<<<<< HEAD
+=======
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
+import android.database.SQLException;
+import android.content.Context;
+>>>>>>> origin/database
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -21,7 +30,7 @@ public class DatabaseManager {
     private DatabaseHelper databaseHelper;
 
     static final String storageDirectory = Environment.getExternalStorageDirectory().getPath() + "/ChitChat/";
-    static final String themeDirectory = storageDirectory + "/images/themes/";
+    static final String themeDirectory = storageDirectory + "/images/";
     static final String audioDirectory = storageDirectory + "/audio/";
 
     static final String DB_NAME = "appdata.db";
@@ -49,7 +58,7 @@ public class DatabaseManager {
     static final String COLUMN_QUESTION = "question_text";
     static final String COLUMN_ANSWER = "answer_text";
     static final String COLUMN_IS_CORRECT = "is_correct";
-    static final String COLUMN_IS_COMPLETE = "is_correct";
+    static final String COLUMN_IS_COMPLETE = "is_complete";
     static final String COLUMN_IMAGE_ASSET = "image_asset";
     static final String COLUMN_AUDIO_ASSET = "audio_asset";
 
@@ -88,7 +97,7 @@ public class DatabaseManager {
             COLUMN_USER_ID,
             COLUMN_THEME_ID,
             COLUMN_LEVEL,
-            COLUMN_IS_COMPLETE,};
+            COLUMN_IS_COMPLETE};
 
     // Create table statements
     static final String CREATE_TABLE_USER = "create table "
@@ -150,7 +159,7 @@ public class DatabaseManager {
         Values.put(COLUMN_GENDER, gender);
         Values.put(COLUMN_CURRENT_LEVEL, 1);
         Values.put(COLUMN_CURRENT_PROGRESS, 0);
-        long uID = database.insert(TABLE_USER, null, Values);
+        long uID = database.insert(TABLE_USER, null, Values); // TODO fix way uId is retrieved. should be an int
         User user = new User(uID, name, age, gender, 1, 0);
         return user;
     }
@@ -181,28 +190,100 @@ public class DatabaseManager {
     public ArrayList<Theme> getThemes(long id, int level) {
 
         ArrayList<Theme> themes = new ArrayList<Theme>();
+        String[] COLUMNS =
+                {"t." + COLUMN_THEME,
+                COLUMN_IMAGE_ASSET,
+                "u." + COLUMN_IS_COMPLETE};
 
-        // SQL to go here
+        String whereClause = "u." + COLUMN_USER_ID + " =? AND " + COLUMN_LEVEL + " =?";
+        String[] whereArgs = new String[]{Long.toString(id),Integer.toString(level)};
 
+<<<<<<< HEAD
         // Prepare example theme object
         themes.add(new Theme("Birthdays", themeDirectory + "birthday.png", false));
         themes.add(new Theme("Movies", themeDirectory + "movie.png", false));
+=======
+        SQLiteQueryBuilder qB = new SQLiteQueryBuilder();
+
+        qB.setTables(TABLE_USERPROGRESS +
+                " u JOIN " + TABLE_THEME + " t ON u." +
+                COLUMN_THEME_ID + " = t." + COLUMN_ID);
+
+        Cursor cursor = qB.query(database,COLUMNS,whereClause,whereArgs,null,null,null);
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast()) {
+            String themeName = cursor.getString(0);
+            String imageName = cursor.getString(1);
+            boolean isComplete = cursor.getInt(2)>0;
+            themes.add(new Theme(themeName, themeDirectory + "imagePath", false));
+            cursor.moveToNext();
+        }
+
+        cursor.close();
+
+        //SELECT t.theme, is_complete, image_asset FROM UserProgress u JOIN Theme t ON u.theme_id = t._id WHERE u._id = ? and level = ?
+
+        //Cursor cursor = database.query(TABLE_USER, TABLE_USER_COLUMNS, whereClause, whereArgs, null, null, null);
+
+        //themes.add(new Theme("Birthdays", themeDirectory + "birthday.png", false));
+        //themes.add(new Theme("Movies", themeDirectory + "movie.png", false));
+>>>>>>> origin/database
 
         return themes;
     }
 
     public Conversation getConversation(String theme, int level) {
 
-        // SQL to go here
+        String[] COLUMNS =
+                {COLUMN_STATEMENT,
+                "s." + COLUMN_AUDIO_ASSET,
+                COLUMN_QUESTION,
+                COLUMN_ANSWER};
+
+        String whereClause = COLUMN_THEME + " =? AND " + COLUMN_LEVEL + " =?";
+        String[] whereArgs = new String[]{theme,Integer.toString(level)};
+
+        SQLiteQueryBuilder qB = new SQLiteQueryBuilder();
+
+        qB.setTables(TABLE_STATEMENT +
+                " s JOIN " + TABLE_INTERACTION + " i ON i." +
+                COLUMN_STATEMENT_ID + " = s." + COLUMN_ID +
+                " JOIN " + TABLE_THEME + " t ON t." + COLUMN_ID +
+                "= s." + COLUMN_THEME_ID);
+
+        Cursor cursor = qB.query(database,COLUMNS,whereClause,whereArgs,null,null,null);
+
+        cursor.moveToFirst();
+        String statement = "";
+        String statementAudioPath = "";
+        String answer = "";
+        String question = "";
+        boolean isCorrect;
+        String answerAudioPath = "";
+        ArrayList<Question> questions = new ArrayList<Question>();
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast()) {
+            statement = cursor.getString(0);
+            statementAudioPath = cursor.getString(1);
+            question = cursor.getString(2);
+            isCorrect = cursor.getInt(3)>0;
+            questions.add(new Question(question, isCorrect));
+            cursor.moveToNext();
+            //answerAudioPath = audioDirectory + "null.wav";
+        }
+
+        cursor.close();
+
 
         // Prepare example conversation object
-        String statementAudioPath = audioDirectory + "birthday_statement.wav";
+        /*String statementAudioPath = audioDirectory + "birthday_statement.wav";
         Conversation conversation = new Conversation("It's my birthday", statementAudioPath);
 
         ArrayList<Question> questions = new ArrayList<Question>();
         questions.add(new Question("How old are you?", true));
         questions.add(new Question("What year were you born?", false));
         String answer = "I am 15 years old";
+<<<<<<< HEAD
         String answerAudioPath = audioDirectory + "birthday.wav";
 
         Interaction interaction = new Interaction(questions, answer, answerAudioPath);
@@ -216,6 +297,11 @@ public class DatabaseManager {
 
         interaction = new Interaction(questions, answer, answerAudioPath);
         conversation.addInteraction(interaction);
+=======
+        String answerAudioPath = audioDirectory + "birthday.wav";*/
+        Conversation conversation = new Conversation(statement, statementAudioPath);
+        Interaction interaction = new Interaction(questions,answer,answerAudioPath);
+>>>>>>> origin/database
         conversation.addInteraction(interaction);
 
         return conversation;
