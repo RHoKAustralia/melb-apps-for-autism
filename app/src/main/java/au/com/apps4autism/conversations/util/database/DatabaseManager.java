@@ -1,15 +1,11 @@
 package au.com.apps4autism.conversations.util.database;
 
-<<<<<<< HEAD
-=======
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.database.SQLException;
 import android.content.Context;
->>>>>>> origin/database
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
@@ -198,11 +194,12 @@ public class DatabaseManager {
         String whereClause = "u." + COLUMN_USER_ID + " =? AND " + COLUMN_LEVEL + " =?";
         String[] whereArgs = new String[]{Long.toString(id),Integer.toString(level)};
 
-<<<<<<< HEAD
+        /*
         // Prepare example theme object
         themes.add(new Theme("Birthdays", themeDirectory + "birthday.png", false));
         themes.add(new Theme("Movies", themeDirectory + "movie.png", false));
-=======
+        */
+
         SQLiteQueryBuilder qB = new SQLiteQueryBuilder();
 
         qB.setTables(TABLE_USERPROGRESS +
@@ -227,7 +224,6 @@ public class DatabaseManager {
 
         //themes.add(new Theme("Birthdays", themeDirectory + "birthday.png", false));
         //themes.add(new Theme("Movies", themeDirectory + "movie.png", false));
->>>>>>> origin/database
 
         return themes;
     }
@@ -283,25 +279,19 @@ public class DatabaseManager {
         questions.add(new Question("How old are you?", true));
         questions.add(new Question("What year were you born?", false));
         String answer = "I am 15 years old";
-<<<<<<< HEAD
+
         String answerAudioPath = audioDirectory + "birthday.wav";
 
-        Interaction interaction = new Interaction(questions, answer, answerAudioPath);
-        conversation.addInteraction(interaction);
 
         questions = new ArrayList<Question>();
         questions.add(new Question("Good question?", true));
         questions.add(new Question("Bad question", false));
         answer = "Yes, yes it is";
-        answerAudioPath = audioDirectory + "birthday.wav";
+        answerAudioPath = audioDirectory + "birthday.wav";*/
 
-        interaction = new Interaction(questions, answer, answerAudioPath);
-        conversation.addInteraction(interaction);
-=======
-        String answerAudioPath = audioDirectory + "birthday.wav";*/
         Conversation conversation = new Conversation(statement, statementAudioPath);
         Interaction interaction = new Interaction(questions,answer,answerAudioPath);
->>>>>>> origin/database
+
         conversation.addInteraction(interaction);
 
         return conversation;
