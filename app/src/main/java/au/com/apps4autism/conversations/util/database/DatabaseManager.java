@@ -1,19 +1,19 @@
 package au.com.apps4autism.conversations.util.database;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.SQLException;
-import android.content.Context;
 import android.content.ContentValues;
+import android.content.Context;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 
 import java.util.ArrayList;
 
-import au.com.apps4autism.conversations.model.User;
-import au.com.apps4autism.conversations.model.Theme;
 import au.com.apps4autism.conversations.model.Conversation;
 import au.com.apps4autism.conversations.model.Interaction;
+import au.com.apps4autism.conversations.model.Level;
 import au.com.apps4autism.conversations.model.Question;
+import au.com.apps4autism.conversations.model.Theme;
+import au.com.apps4autism.conversations.model.User;
 
 public class DatabaseManager {
 
@@ -219,5 +219,14 @@ public class DatabaseManager {
         conversation.addInteraction(interaction);
 
         return conversation;
+    }
+
+    public ArrayList<Level> getLevels() {
+        ArrayList<Level> levels = new ArrayList<>();
+
+        levels.add(new Level("Starting a conversation", 1, false, false));
+        levels.add(new Level("Question words", 2, false, true));
+
+        return levels;
     }
 }

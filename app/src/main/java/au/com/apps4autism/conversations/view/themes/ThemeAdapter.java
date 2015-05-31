@@ -1,4 +1,4 @@
-package au.com.apps4autism.conversations.view.topics;
+package au.com.apps4autism.conversations.view.themes;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -18,10 +18,10 @@ import au.com.apps4autism.conversations.util.ViewHolder;
 /**
  * Created by tim on 30/05/15.
  */
-public class TopicAdapter extends ArrayAdapter<Theme> {
+public class ThemeAdapter extends ArrayAdapter<Theme> {
     private final LayoutInflater mLayoutInflater;
 
-    public TopicAdapter(Context context, List<Theme> themes) {
+    public ThemeAdapter(Context context, List<Theme> themes) {
         super(context, 0, themes);
 
         mLayoutInflater = LayoutInflater.from(context);
@@ -30,7 +30,7 @@ public class TopicAdapter extends ArrayAdapter<Theme> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView == null) {
-            convertView = mLayoutInflater.inflate(R.layout.grid_item_topic, parent, false);
+            convertView = mLayoutInflater.inflate(R.layout.grid_item_theme, parent, false);
         }
 
         Theme theme = getItem(position);

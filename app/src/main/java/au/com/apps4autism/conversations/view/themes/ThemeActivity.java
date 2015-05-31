@@ -1,4 +1,4 @@
-package au.com.apps4autism.conversations.view.topics;
+package au.com.apps4autism.conversations.view.themes;
 
 import android.content.Intent;
 import android.database.SQLException;
@@ -14,13 +14,14 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 
 import au.com.apps4autism.conversations.R;
+import au.com.apps4autism.conversations.model.Level;
 import au.com.apps4autism.conversations.model.Theme;
 import au.com.apps4autism.conversations.util.database.DatabaseManager;
 import au.com.apps4autism.conversations.view.conversation.ConversationActivity;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class TopicActivity extends AppCompatActivity {
+public class ThemeActivity extends AppCompatActivity {
     public static final String LEVEL_NUM_KEY = "levelNum";
 
     @InjectView(R.id.topic_grid)
@@ -30,7 +31,7 @@ public class TopicActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_topics);
+        setContentView(R.layout.activity_themes);
         ButterKnife.inject(this);
 
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -47,7 +48,10 @@ public class TopicActivity extends AppCompatActivity {
             mThemes = databaseManager.getThemes(0, levelNum);
         }
 
-        TopicAdapter adapter = new TopicAdapter(this, mThemes);
+        Level level = databaseManager.getLevels().get(levelNum - 1);
+        getSupportActionBar().setTitle(level.getName());
+
+        ThemeAdapter adapter = new ThemeAdapter(this, mThemes);
 
         mTopicGrid.setAdapter(adapter);
         mTopicGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -55,10 +59,10 @@ public class TopicActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 ImageView imageView = ButterKnife.findById(view, R.id.topic_image);
 
-                Intent intent = new Intent(TopicActivity.this, ConversationActivity.class);
+                Intent intent = new Intent(ThemeActivity.this, ConversationActivity.class);
                 intent.putExtra(ConversationActivity.LEVEL_NUM_KEY, levelNum);
                 intent.putExtra(ConversationActivity.THEME_KEY, mThemes.get(position));
-                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(TopicActivity.this, imageView, "topic_image");
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(ThemeActivity.this, imageView, "topic_image");
                 startActivity(intent, options.toBundle());
             }
         });

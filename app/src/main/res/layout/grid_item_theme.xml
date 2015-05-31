@@ -7,18 +7,13 @@
     android:layout_height="match_parent"
     android:foreground="?android:attr/selectableItemBackground">
 
-    <FrameLayout
+    <au.com.apps4autism.conversations.util.widget.SquareImageView
+        android:id="@+id/topic_image"
+        android:transitionName="topic_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:foreground="@color/main_highlight">
-        <au.com.apps4autism.conversations.util.widget.SquareImageView
-            android:id="@+id/topic_image"
-            android:transitionName="topic_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/stock_cinema"/>
-    </FrameLayout>
+        android:scaleType="centerCrop"
+        android:src="@drawable/stock_cinema"/>
 
     <TextView
         android:id="@+id/topic_text"

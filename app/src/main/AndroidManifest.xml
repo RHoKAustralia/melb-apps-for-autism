@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.topics.TopicActivity"
+            android:name=".view.themes.ThemeActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
