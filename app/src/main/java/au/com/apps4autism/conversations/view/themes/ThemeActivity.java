@@ -51,10 +51,10 @@ public class ThemeActivity extends AppCompatActivity {
         ArrayList<Theme> themes;
         try {
             databaseManager.open();
-            themes = databaseManager.getThemes(0, levelNum);
+            themes = databaseManager.getThemes(1, levelNum);
             databaseManager.close();
         } catch (SQLException e) {
-            themes = databaseManager.getThemes(0, levelNum);
+            themes = databaseManager.getThemes(1, levelNum);
         }
 
         Level level = databaseManager.getLevels().get(levelNum - 1);
