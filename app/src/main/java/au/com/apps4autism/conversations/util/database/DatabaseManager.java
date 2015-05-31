@@ -1,15 +1,12 @@
 package au.com.apps4autism.conversations.util.database;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
-import android.database.SQLException;
-import android.content.Context;
-import android.content.ContentValues;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -19,15 +16,16 @@ import au.com.apps4autism.conversations.model.Level;
 import au.com.apps4autism.conversations.model.Question;
 import au.com.apps4autism.conversations.model.Theme;
 import au.com.apps4autism.conversations.model.User;
+import timber.log.Timber;
 
 public class DatabaseManager {
 
     private SQLiteDatabase database;
     private DatabaseHelper databaseHelper;
 
-    static final String storageDirectory = Environment.getExternalStorageDirectory().getPath() + "/ChitChat/";
-    static final String themeDirectory = storageDirectory + "/images/";
-    static final String audioDirectory = storageDirectory + "/audio/";
+    static final String storageDirectory = Environment.getExternalStorageDirectory().getPath() + "/download/ChitChat/";
+    static final String themeDirectory = storageDirectory + "images/";
+    static final String audioDirectory = storageDirectory + "audio/";
 
     static final String DB_NAME = "appdata.db";
     static final String DB_PATH = storageDirectory + "/db/";
@@ -212,7 +210,8 @@ public class DatabaseManager {
             String themeName = cursor.getString(0);
             String imageName = cursor.getString(1);
             boolean isComplete = cursor.getInt(2)>0;
-            themes.add(new Theme(themeName, themeDirectory + "imagePath", false));
+            themes.add(new Theme(themeName, themeDirectory + imageName, isComplete));
+            Timber.d(themeDirectory + imageName);
             cursor.moveToNext();
         }
 
@@ -234,7 +233,8 @@ public class DatabaseManager {
                 {COLUMN_STATEMENT,
                 "s." + COLUMN_AUDIO_ASSET,
                 COLUMN_QUESTION,
-                COLUMN_ANSWER};
+                COLUMN_ANSWER,
+                COLUMN_IS_CORRECT};
 
         String whereClause = COLUMN_THEME + " =? AND " + COLUMN_LEVEL + " =?";
         String[] whereArgs = new String[]{theme,Integer.toString(level)};
@@ -256,19 +256,34 @@ public class DatabaseManager {
         String question = "";
         boolean isCorrect;
         String answerAudioPath = "";
-        ArrayList<Question> questions = new ArrayList<Question>();
+        //ArrayList<Question> questions = new ArrayList<Question>();
         cursor.moveToFirst();
+        ArrayList<Interaction> interactionList = new ArrayList<Interaction>();
+
+        String lastAnswer = "";
         while(!cursor.isAfterLast()) {
+            ArrayList<Question> questions = new ArrayList<Question>();
             statement = cursor.getString(0);
             statementAudioPath = cursor.getString(1);
+            answer = cursor.getString(3);
             question = cursor.getString(2);
-            isCorrect = cursor.getInt(3)>0;
+            isCorrect = cursor.getInt(4)>0;
             questions.add(new Question(question, isCorrect));
+            if (answer != lastAnswer && lastAnswer != "") {
+                interactionList.add(new Interaction(questions,answer,answerAudioPath));
+                //questions.clear();
+            }
             cursor.moveToNext();
             //answerAudioPath = audioDirectory + "null.wav";
+            lastAnswer = answer;
         }
-
         cursor.close();
+
+        Conversation conversation = new Conversation(statement, statementAudioPath);
+
+        for(int i=0; i < interactionList.size(); i++) {
+            conversation.addInteraction(interactionList.get(i));
+        }
 
 
         // Prepare example conversation object
@@ -288,11 +303,6 @@ public class DatabaseManager {
         questions.add(new Question("Bad question", false));
         answer = "Yes, yes it is";
         answerAudioPath = audioDirectory + "birthday.wav";*/
-
-        Conversation conversation = new Conversation(statement, statementAudioPath);
-        Interaction interaction = new Interaction(questions,answer,answerAudioPath);
-
-        conversation.addInteraction(interaction);
 
         return conversation;
     }

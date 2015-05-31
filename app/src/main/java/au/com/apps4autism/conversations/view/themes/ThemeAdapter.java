@@ -6,10 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.List;
 
 import au.com.apps4autism.conversations.R;
@@ -36,11 +36,10 @@ public class ThemeAdapter extends ArrayAdapter<Theme> {
 
         Theme theme = getItem(position);
 
-        TextView topicText = ViewHolder.get(convertView, R.id.topic_text);
-        topicText.setText(theme.getName());
-
         ImageView imageView = ViewHolder.get(convertView, R.id.topic_image);
-        Picasso.with(getContext()).load(theme.getImagePath()).error(R.drawable.stock_cinema).into(imageView);
+
+        File file = new File(theme.getImagePath());
+        Picasso.with(getContext()).load(file).error(R.drawable.stock_cinema).into(imageView);
 
         if(theme.isComplete()) {
             imageView.setColorFilter(getContext().getResources().getColor(R.color.theme_complete));

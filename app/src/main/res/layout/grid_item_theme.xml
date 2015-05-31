@@ -15,12 +15,12 @@
         android:scaleType="centerCrop"
         android:src="@drawable/stock_cinema"/>
 
-    <TextView
+    <!--<TextView
         android:id="@+id/topic_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textColor="@android:color/white"
         android:gravity="center"
-        tools:text="Movies"/>
+        tools:text="Movies"/>-->
 
 </au.com.apps4autism.conversations.util.widget.SquareGridLayout>

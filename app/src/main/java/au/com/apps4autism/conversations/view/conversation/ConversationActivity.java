@@ -63,6 +63,8 @@ public class ConversationActivity extends AppCompatActivity {
         int levelNum = getIntent().getExtras().getInt(LEVEL_NUM_KEY);
         Theme theme = (Theme)getIntent().getExtras().getSerializable(THEME_KEY);
 
+        getSupportActionBar().setTitle(theme.getName());
+
         DatabaseManager databaseManager = new DatabaseManager(this);
         try {
             databaseManager.open();
@@ -134,6 +136,7 @@ public class ConversationActivity extends AppCompatActivity {
                         mOptionsAdapter.addAll(mCurrentInteraction.getQuestions());
                     } else {
                         mOptionsAdapter.clear();
+                        mPlayButton.setVisibility(View.GONE);
                         Handler handler = new Handler(Looper.getMainLooper());
                         handler.postDelayed(new Runnable() {
                              @Override

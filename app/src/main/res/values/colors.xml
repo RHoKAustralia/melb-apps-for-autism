@@ -5,6 +5,6 @@
     <color name="main_light">#ba68c8</color>
     <color name="main_highlight">#469c27b0</color>
     <color name="theme_complete">#964caf50</color>
-    <color name="level_locked">#14000000</color>
+    <color name="level_locked">#46000000</color>
     <color name="list_background">#ebebeb</color>
 </resources>
