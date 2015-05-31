@@ -5,22 +5,24 @@ public class User {
     public static final String male = "Male";
     public static final String female = "Female";
 
+    private long mId;
     private String mName;
     private int mAge;
     private String mGender;
     private int mCurrentLevel;
     private int mCurrentProgress;
 
-    public User(String name, int age, String gender) {
-        this(name, age, gender, 1, 0);
-    }
-
-    public User(String name, int age, String gender, int currentLevel, int currentProgress) {
+    public User(long id, String name, int age, String gender, int currentLevel, int currentProgress) {
+        mId = id;
         mName = name;
         mAge = age;
         mGender = gender;
         mCurrentLevel = currentLevel;
         mCurrentProgress = currentProgress;
+    }
+
+    public long getId() {
+        return mId;
     }
 
     public String getName() {
@@ -39,7 +41,15 @@ public class User {
         return mCurrentLevel;
     }
 
+    public void setCurrentLevel(int currentLevel) {
+        mCurrentLevel = currentLevel;
+    }
+
     public int getCurrentProgress() {
         return mCurrentProgress;
+    }
+
+    public void setCurrentProgress(int currentProgress) {
+        mCurrentProgress = currentProgress;
     }
 }
