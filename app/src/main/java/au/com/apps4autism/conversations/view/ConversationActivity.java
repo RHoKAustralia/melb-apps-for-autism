@@ -52,7 +52,7 @@ public class ConversationActivity extends AppCompatActivity {
 
         DatabaseManager databaseManager = new DatabaseManager(this);
         databaseManager.open();
-        mConversation = databaseManager.getConversation("Birthday", 1);
+        mConversation = databaseManager.getConversation("Birthdays", 1);
         databaseManager.close();
 
         mInteractions = mConversation.getInteractions();
