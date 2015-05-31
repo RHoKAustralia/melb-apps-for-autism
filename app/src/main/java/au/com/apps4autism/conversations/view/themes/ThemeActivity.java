@@ -3,7 +3,6 @@ package au.com.apps4autism.conversations.view.themes;
 import android.content.Intent;
 import android.database.SQLException;
 import android.os.Bundle;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
@@ -62,8 +61,8 @@ public class ThemeActivity extends AppCompatActivity {
                 Intent intent = new Intent(ThemeActivity.this, ConversationActivity.class);
                 intent.putExtra(ConversationActivity.LEVEL_NUM_KEY, levelNum);
                 intent.putExtra(ConversationActivity.THEME_KEY, mThemes.get(position));
-                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(ThemeActivity.this, imageView, "topic_image");
-                startActivity(intent, options.toBundle());
+                //ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(ThemeActivity.this, imageView, "topic_image");
+                startActivity(intent/*, options.toBundle()*/);
             }
         });
     }

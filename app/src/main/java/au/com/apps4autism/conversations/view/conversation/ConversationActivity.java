@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -39,8 +38,8 @@ public class ConversationActivity extends AppCompatActivity {
     FloatingActionButton mPlayButton;
     @InjectView(R.id.conversation_root)
     RelativeLayout mRootLayout;
-    @InjectView(R.id.topic_image)
-    ImageView mTopicImage;
+    //@InjectView(R.id.topic_image)
+    //ImageView mTopicImage;
 
     private Conversation mConversation;
     private Iterator<Interaction> mInteractions;
@@ -83,12 +82,14 @@ public class ConversationActivity extends AppCompatActivity {
             }
         });
 
+        tts.speak(ttsContent, TextToSpeech.QUEUE_FLUSH, null);
+
         mRootLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mPlayButton.getLayoutParams();
                 layoutParams.setMargins(0,
-                        mTopicImage.getMeasuredHeight() - getResources().getDimensionPixelSize(R.dimen.fab_half_size),
+                        (int)mOptionsList.getY() - getResources().getDimensionPixelSize(R.dimen.fab_half_size),
                         getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin), 0);
                 mPlayButton.setLayoutParams(layoutParams);
             }
@@ -111,6 +112,7 @@ public class ConversationActivity extends AppCompatActivity {
                     mConversationAdapter.add(question.getText());
                     mConversationAdapter.add(mCurrentInteraction.getAnswer());
                     ttsContent = mCurrentInteraction.getAnswer();
+                    tts.speak(ttsContent, TextToSpeech.QUEUE_FLUSH, null);
 
                     mConversationList.post(new Runnable() {
                         @Override
