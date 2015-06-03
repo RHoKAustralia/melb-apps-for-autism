@@ -19,7 +19,7 @@ import java.util.Iterator;
 import au.com.apps4autism.conversations.R;
 import au.com.apps4autism.conversations.model.Conversation;
 import au.com.apps4autism.conversations.model.Interaction;
-import au.com.apps4autism.conversations.model.Question;
+import au.com.apps4autism.conversations.model.Option;
 import au.com.apps4autism.conversations.model.Theme;
 import au.com.apps4autism.conversations.util.database.DatabaseManager;
 import butterknife.ButterKnife;
@@ -110,16 +110,16 @@ public class ConversationActivity extends AppCompatActivity {
         mCurrentInteraction = mInteractions.next();
 
         mOptionsAdapter = new OptionsAdapter(this);
-        mOptionsAdapter.addAll(mCurrentInteraction.getQuestions());
+        mOptionsAdapter.addAll(mCurrentInteraction.getOptions());
         mOptionsList.setAdapter(mOptionsAdapter);
         mOptionsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Question question = mOptionsAdapter.getItem(position);
-                if(question.isCorrect()) {
-                    mConversationAdapter.add(question.getText());
-                    mConversationAdapter.add(mCurrentInteraction.getAnswer());
-                    ttsContent = mCurrentInteraction.getAnswer();
+                Option option = mOptionsAdapter.getItem(position);
+                if(option.isCorrect()) {
+                    mConversationAdapter.add(option.getQuestion());
+                    mConversationAdapter.add(option.getAnswer());
+                    ttsContent = option.getAnswer();
                     mTts.speak(ttsContent, TextToSpeech.QUEUE_FLUSH, null);
 
                     mConversationList.post(new Runnable() {
@@ -133,7 +133,7 @@ public class ConversationActivity extends AppCompatActivity {
                     if(mInteractions.hasNext()) {
                         mCurrentInteraction = mInteractions.next();
                         mOptionsAdapter.clear();
-                        mOptionsAdapter.addAll(mCurrentInteraction.getQuestions());
+                        mOptionsAdapter.addAll(mCurrentInteraction.getOptions());
                     } else {
                         mOptionsAdapter.clear();
                         mPlayButton.setVisibility(View.GONE);
@@ -144,8 +144,8 @@ public class ConversationActivity extends AppCompatActivity {
                                  setResult(RESULT_OK);
                                  finish();
                              }
-                         }, 500);
-                        Toast.makeText(ConversationActivity.this, "You win!", Toast.LENGTH_LONG).show();
+                         }, 1000);
+                        Toast.makeText(ConversationActivity.this, "You win!", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(ConversationActivity.this, "Try again", Toast.LENGTH_LONG).show();

@@ -9,16 +9,12 @@ public class User {
     private String mName;
     private int mAge;
     private String mGender;
-    private int mCurrentLevel;
-    private int mCurrentProgress;
 
-    public User(long id, String name, int age, String gender, int currentLevel, int currentProgress) {
+    public User(long id, String name, int age, String gender) {
         mId = id;
         mName = name;
         mAge = age;
         mGender = gender;
-        mCurrentLevel = currentLevel;
-        mCurrentProgress = currentProgress;
     }
 
     public long getId() {
@@ -35,21 +31,5 @@ public class User {
     
     public String getGender() {
         return mGender;
-    }
-
-    public int getCurrentLevel() {
-        return mCurrentLevel;
-    }
-
-    public void setCurrentLevel(int currentLevel) {
-        mCurrentLevel = currentLevel;
-    }
-
-    public int getCurrentProgress() {
-        return mCurrentProgress;
-    }
-
-    public void setCurrentProgress(int currentProgress) {
-        mCurrentProgress = currentProgress;
     }
 }

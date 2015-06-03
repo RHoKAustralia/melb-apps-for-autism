@@ -4,6 +4,7 @@ package au.com.apps4autism.conversations.model;
  * Created by tim on 31/05/15.
  */
 public class Level {
+    
     private String name;
     private int difficulty;
     private boolean completed;

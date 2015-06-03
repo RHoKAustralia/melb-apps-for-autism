@@ -3,26 +3,18 @@ package au.com.apps4autism.conversations.model;
 import java.util.ArrayList;
 
 public class Interaction {
-    private ArrayList<Question> mQuestions;
-    private String mAnswer;
-    private String mAnswerAudioPath;
 
-    public Interaction(ArrayList<Question> questions, String answer, String audioPath) {
-        mQuestions = questions;
-        mAnswer = answer;
-        mAnswerAudioPath = audioPath;
+    ArrayList<Option> mOptions;
+
+    public Interaction() {
+        mOptions = new ArrayList<Option>();
     }
 
-    public ArrayList<Question> getQuestions() {
-        return mQuestions;
+    public void addOption(Option option) {
+        mOptions.add(option);
     }
 
-    public String getAnswer() {
-        return mAnswer;
+    public ArrayList<Option> getOptions() {
+        return mOptions;
     }
-
-    public String getAnswerAudioPath() {
-        return mAnswerAudioPath;
-    }
-
 }

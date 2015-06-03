@@ -24,7 +24,8 @@ public class LevelActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode == RESULT_OK) {
             mLevelAdapter.getItem(requestCode).setCompleted(true);
-            if(mLevelAdapter.getCount() >= requestCode) {
+            // if(mLevelAdapter.getCount() >= requestCode) { // TODO enable once more levels are added & handle max level
+            if(requestCode == 0) {
                 mLevelAdapter.getItem(requestCode + 1).setLocked(false);
             }
             mLevelAdapter.notifyDataSetChanged();

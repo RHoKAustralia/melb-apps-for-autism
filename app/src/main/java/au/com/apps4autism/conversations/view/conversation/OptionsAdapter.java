@@ -7,12 +7,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import au.com.apps4autism.conversations.model.Question;
+import au.com.apps4autism.conversations.model.Option;
 
 /**
  * Created by tim on 30/05/15.
  */
-public class OptionsAdapter extends ArrayAdapter<Question> {
+public class OptionsAdapter extends ArrayAdapter<Option> {
     private final LayoutInflater mLayoutInflater;
 
     public OptionsAdapter(Context context) {
@@ -27,7 +27,7 @@ public class OptionsAdapter extends ArrayAdapter<Question> {
             convertView = mLayoutInflater.inflate(android.R.layout.simple_list_item_1, parent, false);
         }
 
-        ((TextView)convertView).setText(getItem(position).getText());
+        ((TextView)convertView).setText(getItem(position).getQuestion());
 
         return convertView;
     }

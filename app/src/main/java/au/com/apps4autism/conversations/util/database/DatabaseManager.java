@@ -13,17 +13,16 @@ import java.util.ArrayList;
 import au.com.apps4autism.conversations.model.Conversation;
 import au.com.apps4autism.conversations.model.Interaction;
 import au.com.apps4autism.conversations.model.Level;
-import au.com.apps4autism.conversations.model.Question;
+import au.com.apps4autism.conversations.model.Option;
 import au.com.apps4autism.conversations.model.Theme;
 import au.com.apps4autism.conversations.model.User;
-import timber.log.Timber;
 
 public class DatabaseManager {
 
     private SQLiteDatabase database;
     private DatabaseHelper databaseHelper;
 
-    static final String storageDirectory = Environment.getExternalStorageDirectory().getPath() + "/download/ChitChat/";
+    static final String storageDirectory = Environment.getExternalStorageDirectory().getPath() + "/TalkSteps/";
     static final String themeDirectory = storageDirectory + "images/";
     static final String audioDirectory = storageDirectory + "audio/";
 
@@ -136,7 +135,7 @@ public class DatabaseManager {
     
     public DatabaseManager(Context context) {
         databaseHelper = DatabaseHelper.getInstance(context);
-}
+    }
 
     public void open() throws SQLException {
         database = databaseHelper.getWritableDatabase();
@@ -154,14 +153,14 @@ public class DatabaseManager {
         Values.put(COLUMN_CURRENT_LEVEL, 1);
         Values.put(COLUMN_CURRENT_PROGRESS, 0);
         long uID = database.insert(TABLE_USER, null, Values); // TODO fix way uId is retrieved. should be an int
-        User user = new User(uID, name, age, gender, 1, 0);
+        User user = new User(uID, name, age, gender);
         return user;
     }
 
     public User getUser(String userName) {
-        // Example SQL
 
-        /*String name;
+        /* Example query
+        String name;
         int age;
         String gender;
         String whereClause = COLUMN_NAME + " =?";
@@ -176,7 +175,8 @@ public class DatabaseManager {
 
         cursor.close();*/
 
-        User user = new User(0, "Sam", 15, User.male, 1, 0);
+        // Return placeholder
+        User user = new User(0, "Sam", 15, User.male);
 
         return user;
     }
@@ -184,98 +184,94 @@ public class DatabaseManager {
     public ArrayList<Theme> getThemes(long id, int level) {
 
         ArrayList<Theme> themes = new ArrayList<Theme>();
+        SQLiteQueryBuilder qB = new SQLiteQueryBuilder();
+
+        // SELECT
         String[] COLUMNS =
                 {"t." + COLUMN_THEME,
                 COLUMN_IMAGE_ASSET,
                 "u." + COLUMN_IS_COMPLETE};
 
-        String whereClause = "u." + COLUMN_USER_ID + " =? AND " + COLUMN_LEVEL + " =?";
-        String[] whereArgs = new String[]{Long.toString(id),Integer.toString(level)};
-
-        /*
-        // Prepare example theme object
-        themes.add(new Theme("Birthdays", themeDirectory + "birthday.png", false));
-        themes.add(new Theme("Movies", themeDirectory + "movie.png", false));
-        */
-
-        SQLiteQueryBuilder qB = new SQLiteQueryBuilder();
-
+        // FROM
         qB.setTables(TABLE_USERPROGRESS +
                 " u JOIN " + TABLE_THEME + " t ON u." +
                 COLUMN_THEME_ID + " = t." + COLUMN_ID);
 
+        // WHERE
+        String whereClause = "u." + COLUMN_USER_ID + " =? AND " + COLUMN_LEVEL + " =?";
+        String[] whereArgs = new String[]{Long.toString(id),Integer.toString(level)};
+
         Cursor cursor = qB.query(database,COLUMNS,whereClause,whereArgs,null,null,null);
+
+        String themeName;
+        String imageName;
+        boolean isComplete;
+
         cursor.moveToFirst();
         while(!cursor.isAfterLast()) {
-            String themeName = cursor.getString(0);
-            String imageName = cursor.getString(1);
-            boolean isComplete = cursor.getInt(2)>0;
+            themeName = cursor.getString(0);
+            imageName = cursor.getString(1);
+            isComplete = cursor.getInt(2) > 0;
             themes.add(new Theme(themeName, themeDirectory + imageName, isComplete));
-            Timber.d(themeDirectory + imageName);
             cursor.moveToNext();
         }
-
         cursor.close();
-
-        //SELECT t.theme, is_complete, image_asset FROM UserProgress u JOIN Theme t ON u.theme_id = t._id WHERE u._id = ? and level = ?
-
-        //Cursor cursor = database.query(TABLE_USER, TABLE_USER_COLUMNS, whereClause, whereArgs, null, null, null);
-
-        //themes.add(new Theme("Birthdays", themeDirectory + "birthday.png", false));
-        //themes.add(new Theme("Movies", themeDirectory + "movie.png", false));
 
         return themes;
     }
 
     public Conversation getConversation(String theme, int level) {
 
+        ArrayList<Interaction> interactionList = new ArrayList<Interaction>();
+        SQLiteQueryBuilder qB = new SQLiteQueryBuilder();
+
+        // SELECT
         String[] COLUMNS =
                 {COLUMN_STATEMENT,
                 "s." + COLUMN_AUDIO_ASSET,
                 COLUMN_QUESTION,
                 COLUMN_ANSWER,
-                COLUMN_IS_CORRECT};
+                COLUMN_IS_CORRECT,
+                COLUMN_THEME,
+                COLUMN_LEVEL};
 
-        String whereClause = COLUMN_THEME + " =? AND " + COLUMN_LEVEL + " =?";
-        String[] whereArgs = new String[]{theme,Integer.toString(level)};
-
-        SQLiteQueryBuilder qB = new SQLiteQueryBuilder();
-
+        // FROM
         qB.setTables(TABLE_STATEMENT +
                 " s JOIN " + TABLE_INTERACTION + " i ON i." +
                 COLUMN_STATEMENT_ID + " = s." + COLUMN_ID +
                 " JOIN " + TABLE_THEME + " t ON t." + COLUMN_ID +
                 "= s." + COLUMN_THEME_ID);
 
+        // WHERE
+        String whereClause = COLUMN_THEME + " =? AND " + COLUMN_LEVEL + " =?";
+        String[] whereArgs = new String[]{theme,Integer.toString(level)};
+
         Cursor cursor = qB.query(database,COLUMNS,whereClause,whereArgs,null,null,null);
 
-        cursor.moveToFirst();
+        Interaction interaction = new Interaction();
         String statement = "";
         String statementAudioPath = "";
-        String answer = "";
-        String question = "";
-        boolean isCorrect;
+        String answer;
         String answerAudioPath = "";
-        //ArrayList<Question> questions = new ArrayList<Question>();
-        cursor.moveToFirst();
-        ArrayList<Interaction> interactionList = new ArrayList<Interaction>();
+        String question;
+        boolean isCorrect;
+        int optionCount = 0;
 
-        String lastAnswer = "";
+        cursor.moveToFirst();
         while(!cursor.isAfterLast()) {
-            ArrayList<Question> questions = new ArrayList<Question>();
             statement = cursor.getString(0);
             statementAudioPath = cursor.getString(1);
-            answer = cursor.getString(3);
             question = cursor.getString(2);
+            answer = cursor.getString(3);
             isCorrect = cursor.getInt(4)>0;
-            questions.add(new Question(question, isCorrect));
-            if (answer != lastAnswer && lastAnswer != "") {
-                interactionList.add(new Interaction(questions,answer,answerAudioPath));
-                //questions.clear();
+            interaction.addOption(new Option(question, answer, answerAudioPath, isCorrect));
+            optionCount++;
+            if (optionCount == 2) {
+                interactionList.add(interaction);
+                interaction = new Interaction();
+                optionCount = 0;
             }
             cursor.moveToNext();
-            //answerAudioPath = audioDirectory + "null.wav";
-            lastAnswer = answer;
         }
         cursor.close();
 
@@ -284,25 +280,6 @@ public class DatabaseManager {
         for(int i=0; i < interactionList.size(); i++) {
             conversation.addInteraction(interactionList.get(i));
         }
-
-
-        // Prepare example conversation object
-        /*String statementAudioPath = audioDirectory + "birthday_statement.wav";
-        Conversation conversation = new Conversation("It's my birthday", statementAudioPath);
-
-        ArrayList<Question> questions = new ArrayList<Question>();
-        questions.add(new Question("How old are you?", true));
-        questions.add(new Question("What year were you born?", false));
-        String answer = "I am 15 years old";
-
-        String answerAudioPath = audioDirectory + "birthday.wav";
-
-
-        questions = new ArrayList<Question>();
-        questions.add(new Question("Good question?", true));
-        questions.add(new Question("Bad question", false));
-        answer = "Yes, yes it is";
-        answerAudioPath = audioDirectory + "birthday.wav";*/
 
         return conversation;
     }
