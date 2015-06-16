@@ -22,7 +22,7 @@ public class Option {
         return mAnswer;
     }
 
-    public String getmAnswerAudioPath() {
+    public String getAnswerAudioPath() {
         return mAnswerAudioPath;
     }
 
